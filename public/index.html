@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gemini AI Math Calculator</title>
+    <style>
+      :root {
+        --bg-color: #0d1117;
+        --card-bg: #161b22;
+        --accent-color: #58a6ff;
+        --text-color: #c9d1d9;
+        --border-color: #30363d;
+        --ai-glow: #79c0ff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .calculator-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 30px;
+        width: 100%;
+        max-width: 550px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .header h2 {
+        color: #fff;
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        color: #8b949e;
+        font-size: 0.9rem;
+      }
+
+      .upload-section {
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.02);
+        margin-bottom: 20px;
+      }
+
+      .upload-section:hover {
+        border-color: var(--accent-color);
+        background: rgba(88, 166, 255, 0.05);
+      }
+
+      #imageInput {
+        display: none;
+      }
+
+      .preview-img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-top: 15px;
+        display: none;
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background-color: #238636;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-submit:hover {
+        background-color: #2ea043;
+      }
+
+      .btn-submit:disabled {
+        background-color: #21262d;
+        color: #484f58;
+        cursor: not-allowed;
+      }
+
+      /* Animasi Loading Angka AI */
+      .loading-box {
+        display: none;
+        text-align: center;
+        margin-top: 25px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+      }
+
+      .ai-matrix {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: var(--ai-glow);
+        text-shadow: 0 0 10px rgba(121, 192, 255, 0.6);
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+      }
+
+      .loading-text {
+        font-size: 0.85rem;
+        color: #8b949e;
+      }
+
+      /* Output Hasil */
+      .result-box {
+        margin-top: 25px;
+        display: none;
+        background: #0d1117;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      .result-box h3 {
+        font-size: 1rem;
+        color: var(--accent-color);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .result-content {
+        white-space: pre-wrap;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #e6edf3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator-card">
+      <div class="header">
+        <h2>🤖 Gemini AI Calculator</h2>
+        <p>Unggah foto soal matematika untuk diselesaikan oleh AI</p>
+      </div>
+
+      <div
+        class="upload-section"
+        onclick="document.getElementById('imageInput').click()"
+      >
+        <span id="uploadText">📁 Klik atau tarik foto soal ke sini</span>
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          onchange="previewImage(event)"
+        />
+        <img id="preview" class="preview-img" alt="Pratinjau Soal" />
+      </div>
+
+      <button class="btn-submit" id="btnHitung" onclick="prosesFoto()">
+        Hitung Soal
+      </button>
+
+      <!-- Animasi AI Loading -->
+      <div class="loading-box" id="loading">
+        <div class="ai-matrix" id="matrixText">048 + 912 = ?</div>
+        <div class="loading-text">
+          Sedang menganalisis struktur matematika...
+        </div>
+      </div>
+
+      <!-- Container Hasil -->
+      <div class="result-box" id="resultBox">
+        <h3>Hasil & Langkah Penyelesaian:</h3>
+        <div class="result-content" id="resultText"></div>
+      </div>
+    </div>
+
+    <script>
+      let matrixInterval;
+
+      function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const img = document.getElementById("preview");
+            img.src = e.target.result;
+            img.style.display = "block";
+            document.getElementById("uploadText").innerText = "Ganti foto soal";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Fungsi Generator Angka Acak untuk Efek AI
+      function startMatrixAnimation() {
+        const matrixText = document.getElementById("matrixText");
+        const symbols = ["+", "-", "×", "÷", "=", "√", "π", "∫", "∑", "%"];
+
+        matrixInterval = setInterval(() => {
+          const n1 = Math.floor(Math.random() * 900) + 100;
+          const n2 = Math.floor(Math.random() * 900) + 100;
+          const n3 = Math.floor(Math.random() * 99) + 1;
+          const sym = symbols[Math.floor(Math.random() * symbols.length)];
+          const sym2 = symbols[Math.floor(Math.random() * symbols.length)];
+
+          matrixText.innerText = `${n1} ${sym} ${n2} ${sym2} ${n3}`;
+        }, 70);
+      }
+
+      function stopMatrixAnimation() {
+        clearInterval(matrixInterval);
+      }
+
+      async function prosesFoto() {
+        const fileInput = document.getElementById("imageInput");
+        const resultBox = document.getElementById("resultBox");
+        const resultText = document.getElementById("resultText");
+        const loadingDiv = document.getElementById("loading");
+        const btn = document.getElementById("btnHitung");
+
+        if (!fileInput.files[0]) {
+          alert("Pilih gambar terlebih dahulu!");
+          return;
+        }
+
+        const file = fileInput.files[0];
+
+        // Reset UI & jalankan animasi loading
+        resultBox.style.display = "none";
+        loadingDiv.style.display = "block";
+        btn.disabled = true;
+        startMatrixAnimation();
+
+        try {
+          const base64Data = await fileToBase64(file);
+
+          const res = await fetch("/api/hitung", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              imageBase64: base64Data,
+              mimeType: file.type,
+            }),
+          });
+
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+
+          resultText.innerText = data.result;
+          resultBox.style.display = "block";
+        } catch (err) {
+          resultText.innerText = "Terjadi kesalahan: " + err.message;
+          resultBox.style.display = "block";
+        } finally {
+          stopMatrixAnimation();
+          loadingDiv.style.display = "none";
+          btn.disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>
