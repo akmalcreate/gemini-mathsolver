@@ -15,14 +15,16 @@ const port = process.env.PORT || 3000;
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error("❌ ERROR: GEMINI_API_KEY tidak ditemukan di file .env!");
+  console.error(
+    "❌ ERROR: GEMINI_API_KEY tidak ditemukan di environment variable!",
+  );
 }
 
 const ai = new GoogleGenAI({ apiKey: apiKey });
 
 app.use(express.json({ limit: "10mb" }));
 
-// Arahkan static folder dan index.html ke folder public di luar (../public)
+// Arahkan file statis ke folder public di luar folder api
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req, res) => {
@@ -46,7 +48,7 @@ app.post("/api/hitung", async (req, res) => {
             data: imageBase64,
           },
         },
-        "Selesaikan soal matematika yang ada di dalam gambar ini beserta langkah penyelesaiannya.",
+        "Selesaikan soal matematika di gambar ini. Berikan jawaban dalam format catat-tangan yang sangat rapi, simpel, dan menarik. DILARANG menggunakan tanda markdown berlebihan seperti # atau *. Format penulisan harus persis seperti ini:\n\n📝 SOAL:\n[tulis soal]\n\n✏️ LANGKAH:\n1. [langkah 1]\n2. [langkah 2]\n\n📌 HASIL AKHIR:\n[hasil akhir]",
       ],
     });
 
@@ -63,5 +65,4 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// Bagian bawah tetap sama
 export default app;
