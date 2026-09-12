@@ -21,11 +21,12 @@ if (!apiKey) {
 const ai = new GoogleGenAI({ apiKey: apiKey });
 
 app.use(express.json({ limit: "10mb" }));
-app.use(express.static(path.join(__dirname, "public")));
 
-// Route utama untuk menampilkan halaman web (menghilangkan error Cannot GET /)
+// Arahkan static folder dan index.html ke folder public di luar (../public)
+app.use(express.static(path.join(__dirname, "../public")));
+
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
 app.post("/api/hitung", async (req, res) => {
@@ -62,5 +63,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// Diperlukan oleh Vercel
+// Bagian bawah tetap sama
 export default app;
