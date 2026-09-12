@@ -1,8 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,7 +21,12 @@ if (!apiKey) {
 const ai = new GoogleGenAI({ apiKey: apiKey });
 
 app.use(express.json({ limit: "10mb" }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
+
+// Route utama untuk menampilkan halaman web (menghilangkan error Cannot GET /)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.post("/api/hitung", async (req, res) => {
   try {
@@ -46,6 +56,11 @@ app.post("/api/hitung", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`);
+  });
+}
+
+// Diperlukan oleh Vercel
+export default app;
