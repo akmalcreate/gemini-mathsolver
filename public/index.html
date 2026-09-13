@@ -67,25 +67,7 @@
         margin-top: 6px;
       }
 
-      /* Area Display Foto */
-      .upload-box {
-        border: 2px dashed var(--border-color);
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        background-color: rgba(255, 255, 255, 0.02);
-        margin-bottom: 20px;
-        position: relative;
-      }
-
-      .upload-label {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        display: block;
-        margin-bottom: 12px;
-      }
-
-      /* Menu Opsi (+) Modal Pop-up */
+      /* Area Pilihan Sumber Foto */
       .action-menu {
         display: flex;
         justify-content: center;
@@ -115,6 +97,24 @@
         border-color: var(--text-muted);
       }
 
+      /* Area Preview Gambar */
+      .upload-box {
+        border: 2px dashed var(--border-color);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.02);
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .upload-label {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 12px;
+      }
+
       figure {
         width: 100%;
         max-height: 280px;
@@ -133,7 +133,6 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
-      /* Input Tersembunyi */
       input[type="file"] {
         display: none;
       }
@@ -210,6 +209,43 @@
         word-wrap: break-word;
       }
 
+      /* Bagian Sedekah / Support Developer */
+      .support-section {
+        margin-top: 25px;
+        padding: 16px;
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px dashed var(--border-color);
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .support-text {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+
+      .btn-donate {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #ff4757;
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 20px;
+        text-decoration: none;
+        transition:
+          background-color 0.2s,
+          transform 0.1s;
+      }
+
+      .btn-donate:hover {
+        background-color: #ff6b81;
+        transform: translateY(-1px);
+      }
+
       footer {
         margin-top: 20px;
         text-align: center;
@@ -217,7 +253,6 @@
         color: var(--text-muted);
       }
 
-      /* Media Queries untuk Perangkat */
       @media (min-width: 600px) {
         .container {
           padding: 32px;
@@ -266,15 +301,12 @@
             <img id="imagePreview" alt="Pratinjau Soal Matematika" />
           </figure>
 
-          <!-- Input File Galeri -->
           <input
             type="file"
             id="inputGallery"
             accept="image/*"
             onchange="previewFile(this)"
           />
-
-          <!-- Input File Kamera Langsung -->
           <input
             type="file"
             id="inputCamera"
@@ -297,6 +329,22 @@
 
         <!-- Hasil Artikel Jawaban -->
         <article id="result" class="result-box"></article>
+
+        <!-- Section Sedekah / Support Developer -->
+        <div class="support-section">
+          <p class="support-text">
+            Suka dengan aplikasi ini? Kamu bisa bersedekah / mendukung developer
+            agar layanan tetap gratis! ☕
+          </p>
+          <a
+            href="https://saweria.co/NoirCam"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-donate"
+          >
+            ❤️ Bersedekah via Saweria
+          </a>
+        </div>
       </section>
 
       <footer>
