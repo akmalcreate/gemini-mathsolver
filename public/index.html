@@ -33,70 +33,91 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 20px;
+        padding: 16px;
       }
 
       .container {
         background-color: var(--card-bg);
         border: 1px solid var(--border-color);
         border-radius: 12px;
-        padding: 30px;
-        max-width: 520px;
+        padding: 24px;
         width: 100%;
+        max-width: 560px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       }
 
-      .header {
+      header {
         text-align: center;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
       }
 
-      .header h2 {
-        font-size: 24px;
+      header h1 {
+        font-size: 1.5rem;
         font-weight: 700;
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
       }
 
-      .header p {
-        font-size: 14px;
+      header p {
+        font-size: 0.875rem;
         color: var(--text-muted);
         margin-top: 6px;
       }
 
-      /* Area Upload & Preview Gambar */
+      /* Area Display Foto */
       .upload-box {
         border: 2px dashed var(--border-color);
         border-radius: 10px;
         padding: 20px;
         text-align: center;
         background-color: rgba(255, 255, 255, 0.02);
-        cursor: pointer;
-        transition:
-          border-color 0.2s,
-          background-color 0.2s;
         margin-bottom: 20px;
-      }
-
-      .upload-box:hover {
-        border-color: var(--text-muted);
-        background-color: rgba(255, 255, 255, 0.04);
+        position: relative;
       }
 
       .upload-label {
-        font-size: 14px;
+        font-size: 0.875rem;
         color: var(--text-muted);
         display: block;
         margin-bottom: 12px;
-        cursor: pointer;
       }
 
-      .preview-container {
+      /* Menu Opsi (+) Modal Pop-up */
+      .action-menu {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .btn-action {
+        background-color: #21262d;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        padding: 10px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition:
+          background-color 0.2s,
+          border-color 0.2s;
+      }
+
+      .btn-action:hover {
+        background-color: #30363d;
+        border-color: var(--text-muted);
+      }
+
+      figure {
         width: 100%;
-        max-height: 260px;
+        max-height: 280px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -104,14 +125,15 @@
         border-radius: 8px;
       }
 
-      .preview-container img {
+      figure img {
         max-width: 100%;
-        max-height: 260px;
+        max-height: 280px;
         object-fit: contain;
         border-radius: 6px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
+      /* Input Tersembunyi */
       input[type="file"] {
         display: none;
       }
@@ -121,15 +143,13 @@
         width: 100%;
         background-color: var(--accent-green);
         color: #ffffff;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 600;
         padding: 14px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition:
-          background-color 0.2s,
-          transform 0.1s;
+        transition: background-color 0.2s;
       }
 
       .btn-submit:hover {
@@ -155,7 +175,7 @@
 
       .random-math-stream {
         font-family: "Courier New", monospace;
-        font-size: 18px;
+        font-size: 1.1rem;
         font-weight: bold;
         color: #58a6ff;
         letter-spacing: 2px;
@@ -163,12 +183,12 @@
       }
 
       .loading-text {
-        font-size: 13px;
+        font-size: 0.8rem;
         color: var(--text-muted);
       }
 
       /* Hasil Jawaban Kertas Catatan */
-      .result-box {
+      article.result-box {
         display: none;
         margin-top: 24px;
         background-color: var(--paper-bg);
@@ -179,9 +199,9 @@
         background-size: 100% 1.8rem;
         line-height: 1.8rem;
         font-family: "Courier New", Courier, monospace;
-        font-size: 15px;
+        font-size: 0.95rem;
         font-weight: 600;
-        padding: 22px 20px 22px 30px;
+        padding: 20px 18px 20px 24px;
         border-left: 5px solid #ff6b6b;
         border-radius: 6px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
@@ -189,76 +209,131 @@
         white-space: pre-line;
         word-wrap: break-word;
       }
+
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      /* Media Queries untuk Perangkat */
+      @media (min-width: 600px) {
+        .container {
+          padding: 32px;
+        }
+        header h1 {
+          font-size: 1.75rem;
+        }
+        figure,
+        figure img {
+          max-height: 320px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .container {
+          max-width: 620px;
+          padding: 40px;
+        }
+      }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h2>🤖 Gemini AI Calculator</h2>
-        <p>Unggah foto soal matematika untuk diselesaikan oleh AI</p>
-      </div>
+    <main class="container">
+      <header>
+        <h1>🤖 Gemini AI Calculator</h1>
+        <p>Unggah foto atau jepret langsung soal matematika</p>
+      </header>
 
-      <!-- Area File Upload & Preview -->
-      <div
-        class="upload-box"
-        onclick="document.getElementById('imageInput').click()"
-      >
-        <span class="upload-label" id="uploadText"
-          >📁 Pilih atau ganti foto soal</span
-        >
-        <div
-          class="preview-container"
-          id="previewWrapper"
-          style="display: none"
-        >
-          <img id="imagePreview" alt="Preview Soal" />
+      <section class="calculator-body">
+        <!-- Area Pilihan Sumber Foto -->
+        <div class="action-menu">
+          <button class="btn-action" onclick="openCamera()">
+            📷 Buka Kamera
+          </button>
+          <button class="btn-action" onclick="openGallery()">
+            🖼️ Ambil Galeri
+          </button>
         </div>
-        <input
-          type="file"
-          id="imageInput"
-          accept="image/*"
-          onchange="previewFile()"
-        />
-      </div>
 
-      <!-- Tombol Eksekusi -->
-      <button class="btn-submit" id="btnHitung" onclick="hitungSoal()">
-        Hitung Soal
-      </button>
+        <!-- Area Preview Gambar -->
+        <div class="upload-box">
+          <span class="upload-label" id="uploadText"
+            >Belum ada foto yang dipilih</span
+          >
+          <figure id="previewWrapper" style="display: none">
+            <img id="imagePreview" alt="Pratinjau Soal Matematika" />
+          </figure>
 
-      <!-- Animation Loading Angka Acak -->
-      <div class="loading-container" id="loadingBox">
-        <div class="random-math-stream" id="mathStream">3 x 6 + 2 = ...</div>
-        <div class="loading-text">Menganalisis gambar & menghitung...</div>
-      </div>
+          <!-- Input File Galeri -->
+          <input
+            type="file"
+            id="inputGallery"
+            accept="image/*"
+            onchange="previewFile(this)"
+          />
 
-      <!-- Container Hasil Penjelasan -->
-      <div id="result" class="result-box"></div>
-    </div>
+          <!-- Input File Kamera Langsung -->
+          <input
+            type="file"
+            id="inputCamera"
+            accept="image/*"
+            capture="environment"
+            onchange="previewFile(this)"
+          />
+        </div>
+
+        <!-- Tombol Eksekusi -->
+        <button class="btn-submit" id="btnHitung" onclick="hitungSoal()">
+          Hitung Soal
+        </button>
+
+        <!-- Status Loading Animation -->
+        <aside class="loading-container" id="loadingBox">
+          <div class="random-math-stream" id="mathStream">3 x 6 + 2 = ...</div>
+          <p class="loading-text">Menganalisis gambar & menghitung...</p>
+        </aside>
+
+        <!-- Hasil Artikel Jawaban -->
+        <article id="result" class="result-box"></article>
+      </section>
+
+      <footer>
+        <p>Powered by Google Gemini API & Express.js</p>
+      </footer>
+    </main>
 
     <script>
       let loadingInterval = null;
+      let selectedFileInput = null;
 
-      // Pratinjau Gambar saat Diunggah
-      function previewFile() {
-        const fileInput = document.getElementById("imageInput");
+      function openCamera() {
+        document.getElementById("inputCamera").click();
+      }
+
+      function openGallery() {
+        document.getElementById("inputGallery").click();
+      }
+
+      function previewFile(inputElem) {
         const previewWrapper = document.getElementById("previewWrapper");
         const imagePreview = document.getElementById("imagePreview");
         const uploadText = document.getElementById("uploadText");
 
-        const file = fileInput.files[0];
+        const file = inputElem.files[0];
         if (file) {
+          selectedFileInput = inputElem;
           const reader = new FileReader();
           reader.onload = function (e) {
             imagePreview.src = e.target.result;
             previewWrapper.style.display = "flex";
-            uploadText.innerText = "Ganti foto soal";
+            uploadText.innerText = "Foto Soal Matematika:";
           };
           reader.readAsDataURL(file);
         }
       }
 
-      // Generator Angka & Operasi Acak untuk Sistem Loading
       function startRandomMathAnimation() {
         const mathStream = document.getElementById("mathStream");
         const operators = ["+", "-", "×", "÷", "^", "√"];
@@ -280,22 +355,21 @@
         }
       }
 
-      // Proses Submit API
       async function hitungSoal() {
-        const fileInput = document.getElementById("imageInput");
+        if (!selectedFileInput || !selectedFileInput.files[0]) {
+          alert(
+            "Pilih dari galeri atau ambil foto lewat kamera terlebih dahulu!",
+          );
+          return;
+        }
+
         const btn = document.getElementById("btnHitung");
         const resultDiv = document.getElementById("result");
         const loadingBox = document.getElementById("loadingBox");
 
-        if (!fileInput.files[0]) {
-          alert("Pilih foto soal matematika terlebih dahulu!");
-          return;
-        }
-
-        const file = fileInput.files[0];
+        const file = selectedFileInput.files[0];
         const reader = new FileReader();
 
-        // Set State Loading
         btn.disabled = true;
         resultDiv.style.display = "none";
         loadingBox.style.display = "block";
@@ -332,7 +406,6 @@
             alert("Gagal terhubung ke server backend.");
             console.error(err);
           } finally {
-            // Reset State Loading
             stopRandomMathAnimation();
             loadingBox.style.display = "none";
             btn.disabled = false;
