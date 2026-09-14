@@ -15,7 +15,7 @@ app.use(
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
-// 2. SECURITY & USAGE MONITORING: Rate Limiting (Maks 15 request/menit per IP)
+// 2. RATE LIMITING
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 15,
@@ -26,24 +26,29 @@ const limiter = rateLimit({
       "Terlalu banyak permintaan dari IP ini. Silakan coba lagi nanti (Rate limit reached).",
   },
 });
+
 app.use("/api/hitung", limiter);
+app.use("/hitung", limiter);
 
 // Inisialisasi Gemini API
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// 3. SLA & HEALTH CHECK ENDPOINT (Diakses oleh UptimeRobot / Ping monitor)
-app.get("/api/health", (req, res) => {
+// 3. SLA & HEALTH CHECK ENDPOINT (Diberikan rute ganda agar kompatibel penuh)
+const healthHandler = (req, res) => {
   res.status(200).json({
     status: "UP",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     service: "Gemini MathSolver API",
   });
-});
+};
 
-// Endpoint utama hitung soal
-app.post("/api/hitung", async (req, res) => {
-  const startTime = Date.now(); // PERFORMANCE MONITORING: Start timer
+app.get("/api/health", healthHandler);
+app.get("/health", healthHandler);
+
+// 4. ENDPOINT HITUNG SOAL
+const hitungHandler = async (req, res) => {
+  const startTime = Date.now();
 
   try {
     const { imageBase64, mimeType } = req.body;
@@ -52,7 +57,6 @@ app.post("/api/hitung", async (req, res) => {
       return res.status(400).json({ error: "Data gambar tidak valid." });
     }
 
-    // Call Gemini API
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
@@ -73,9 +77,7 @@ app.post("/api/hitung", async (req, res) => {
       ],
     });
 
-    const duration = Date.now() - startTime; // PERFORMANCE MONITORING: Hitung durasi
-
-    // USAGE & PERFORMANCE LOGGING (Tercatat otomatis di Vercel Logs)
+    const duration = Date.now() - startTime;
     console.log(
       `[USAGE & PERF LOG] Status: 200 | Latency: ${duration}ms | Timestamp: ${new Date().toISOString()}`,
     );
@@ -97,6 +99,9 @@ app.post("/api/hitung", async (req, res) => {
       details: error.message,
     });
   }
-});
+};
+
+app.post("/api/hitung", hitungHandler);
+app.post("/hitung", hitungHandler);
 
 export default app;
