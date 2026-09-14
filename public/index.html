@@ -3,7 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gemini AI Math Calculator</title>
+
+    <!-- SEO Meta Tags Utama -->
+    <title>Gemini AI Math Calculator - Solusi Soal Matematika Otomatis</title>
+    <meta
+      name="description"
+      content="Kalkulator Matematika berbasis Google Gemini AI. Unggah foto atau jepret langsung soal matematika kamu untuk mendapatkan jawaban dan langkah-langkah penyelesaiannya secara praktis dan otomatis."
+    />
+    <meta
+      name="keywords"
+      content="gemini math solver, AI kalkulator matematika, pecahkan soal matematika foto, OCR matematika AI, solusi matematika otomatis"
+    />
+    <meta name="author" content="Moch Akmal Almagribi" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / WhatsApp / Social Media Preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gemini-mathsolver.vercel.app/" />
+    <meta
+      property="og:title"
+      content="Gemini AI Math Calculator - Solusi Soal Matematika Otomatis"
+    />
+    <meta
+      property="og:description"
+      content="Foto soal matematikamu dan dapatkan jawaban otomatis lengkap dengan langkah-langkah penyelesaiannya menggunakan AI."
+    />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Gemini AI Math Calculator",
+        "url": "https://gemini-mathsolver.vercel.app/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "All",
+        "description": "Aplikasi berbasis web untuk menyelesaikan soal matematika secara otomatis dari foto menggunakan Google Gemini AI API.",
+        "author": {
+          "@type": "Person",
+          "name": "Moch Akmal Almagribi"
+        }
+      }
+    </script>
+
     <style>
       :root {
         --bg-color: #0d1117;
@@ -67,7 +109,6 @@
         margin-top: 6px;
       }
 
-      /* Area Pilihan Sumber Foto */
       .action-menu {
         display: flex;
         justify-content: center;
@@ -97,7 +138,6 @@
         border-color: var(--text-muted);
       }
 
-      /* Area Preview Gambar */
       .upload-box {
         border: 2px dashed var(--border-color);
         border-radius: 10px;
@@ -137,7 +177,6 @@
         display: none;
       }
 
-      /* Tombol Hitung */
       .btn-submit {
         width: 100%;
         background-color: var(--accent-green);
@@ -161,7 +200,6 @@
         cursor: not-allowed;
       }
 
-      /* System Loading Angka Acak */
       .loading-container {
         display: none;
         text-align: center;
@@ -186,7 +224,6 @@
         color: var(--text-muted);
       }
 
-      /* Hasil Jawaban Kertas Catatan */
       article.result-box {
         display: none;
         margin-top: 24px;
@@ -209,7 +246,14 @@
         word-wrap: break-word;
       }
 
-      /* Bagian Sedekah / Support Developer */
+      .perf-metric {
+        display: none;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-align: right;
+        margin-top: 8px;
+      }
+
       .support-section {
         margin-top: 25px;
         padding: 16px;
@@ -282,7 +326,6 @@
       </header>
 
       <section class="calculator-body">
-        <!-- Area Pilihan Sumber Foto -->
         <div class="action-menu">
           <button class="btn-action" onclick="openCamera()">
             📷 Buka Kamera
@@ -292,7 +335,6 @@
           </button>
         </div>
 
-        <!-- Area Preview Gambar -->
         <div class="upload-box">
           <span class="upload-label" id="uploadText"
             >Belum ada foto yang dipilih</span
@@ -316,21 +358,20 @@
           />
         </div>
 
-        <!-- Tombol Eksekusi -->
         <button class="btn-submit" id="btnHitung" onclick="hitungSoal()">
           Hitung Soal
         </button>
 
-        <!-- Status Loading Animation -->
         <aside class="loading-container" id="loadingBox">
           <div class="random-math-stream" id="mathStream">3 x 6 + 2 = ...</div>
           <p class="loading-text">Menganalisis gambar & menghitung...</p>
         </aside>
 
-        <!-- Hasil Artikel Jawaban -->
         <article id="result" class="result-box"></article>
+        <div id="perfMetric" class="perf-metric">
+          ⚡ Waktu Pemrosesan: <span id="latencyValue">0</span> ms
+        </div>
 
-        <!-- Section Sedekah / Support Developer -->
         <div class="support-section">
           <p class="support-text">
             Suka dengan aplikasi ini? Kamu bisa bersedekah / mendukung developer
@@ -414,12 +455,15 @@
         const btn = document.getElementById("btnHitung");
         const resultDiv = document.getElementById("result");
         const loadingBox = document.getElementById("loadingBox");
+        const perfMetric = document.getElementById("perfMetric");
+        const latencyValue = document.getElementById("latencyValue");
 
         const file = selectedFileInput.files[0];
         const reader = new FileReader();
 
         btn.disabled = true;
         resultDiv.style.display = "none";
+        perfMetric.style.display = "none";
         loadingBox.style.display = "block";
         startRandomMathAnimation();
 
@@ -444,6 +488,11 @@
             if (res.ok) {
               resultDiv.innerText = data.result;
               resultDiv.style.display = "block";
+
+              if (data.performance && data.performance.latencyMs) {
+                latencyValue.innerText = data.performance.latencyMs;
+                perfMetric.style.display = "block";
+              }
             } else {
               alert(
                 "Terjadi kesalahan: " +

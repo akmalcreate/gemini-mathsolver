@@ -1,68 +1,102 @@
 import express from "express";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { GoogleGenAI } from "@google/genai";
 
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
-const port = process.env.PORT || 3000;
 
-const apiKey = process.env.GEMINI_API_KEY;
-
-if (!apiKey) {
-  console.error(
-    "❌ ERROR: GEMINI_API_KEY tidak ditemukan di environment variable!",
-  );
-}
-
-const ai = new GoogleGenAI({ apiKey: apiKey });
-
+// 1. SECURITY MONITORING: Security Headers & CORS
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
+app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
-// Arahkan file statis ke folder public di luar folder api
-app.use(express.static(path.join(__dirname, "../public")));
+// 2. SECURITY & USAGE MONITORING: Rate Limiting (Maks 15 request/menit per IP)
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error:
+      "Terlalu banyak permintaan dari IP ini. Silakan coba lagi nanti (Rate limit reached).",
+  },
+});
+app.use("/api/hitung", limiter);
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
+// Inisialisasi Gemini API
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+// 3. SLA & HEALTH CHECK ENDPOINT (Diakses oleh UptimeRobot / Ping monitor)
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    service: "Gemini MathSolver API",
+  });
 });
 
+// Endpoint utama hitung soal
 app.post("/api/hitung", async (req, res) => {
+  const startTime = Date.now(); // PERFORMANCE MONITORING: Start timer
+
   try {
     const { imageBase64, mimeType } = req.body;
 
     if (!imageBase64 || !mimeType) {
-      return res.status(400).json({ error: "Gambar tidak ditemukan" });
+      return res.status(400).json({ error: "Data gambar tidak valid." });
     }
 
+    // Call Gemini API
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
-          inlineData: {
-            mimeType: mimeType,
-            data: imageBase64,
-          },
+          role: "user",
+          parts: [
+            {
+              inlineData: {
+                data: imageBase64,
+                mimeType: mimeType,
+              },
+            },
+            {
+              text: "Selesaikan soal matematika pada gambar ini. Berikan jawaban yang tepat, singkat, rapi, dan sertakan langkah-langkah penyelesaiannya secara jelas.",
+            },
+          ],
         },
-        "Selesaikan soal matematika di gambar ini. Berikan jawaban dalam format catat-tangan yang sangat rapi, simpel, dan menarik. DILARANG menggunakan tanda markdown berlebihan seperti # atau *. Format penulisan harus persis seperti ini:\n\n📝 SOAL:\n[tulis soal]\n\n✏️ LANGKAH:\n1. [langkah 1]\n2. [langkah 2]\n\n📌 HASIL AKHIR:\n[hasil akhir]",
       ],
     });
 
-    res.json({ result: response.text });
+    const duration = Date.now() - startTime; // PERFORMANCE MONITORING: Hitung durasi
+
+    // USAGE & PERFORMANCE LOGGING (Tercatat otomatis di Vercel Logs)
+    console.log(
+      `[USAGE & PERF LOG] Status: 200 | Latency: ${duration}ms | Timestamp: ${new Date().toISOString()}`,
+    );
+
+    return res.status(200).json({
+      result: response.text,
+      performance: {
+        latencyMs: duration,
+      },
+    });
   } catch (error) {
-    console.error("Error Detail:", error);
-    res.status(500).json({ error: error.message || "Gagal memproses gambar." });
+    const duration = Date.now() - startTime;
+    console.error(
+      `[ERROR LOG] Status: 500 | Latency: ${duration}ms | Error: ${error.message}`,
+    );
+
+    return res.status(500).json({
+      error: "Gagal memproses gambar matematika.",
+      details: error.message,
+    });
   }
 });
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
-  });
-}
 
 export default app;
