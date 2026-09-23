@@ -11,14 +11,14 @@
     />
 
     <!-- SEO Meta Tags Utama -->
-    <title>Gemini AI Math Calculator - Solusi Soal Matematika Otomatis</title>
+    <title>Gemini AI Math & Trading Calculator - Solusi Otomatis AI</title>
     <meta
       name="description"
-      content="Kalkulator Matematika berbasis Google Gemini AI. Unggah foto atau jepret langsung soal matematika kamu untuk mendapatkan jawaban dan langkah-langkah penyelesaiannya secara praktis dan otomatis."
+      content="Kalkulator AI Multiguna berbasis Google Gemini. Solusi otomatis untuk pemecahan soal matematika dan analisis perhitungan cepat pialang/trading berjangka dari foto."
     />
     <meta
       name="keywords"
-      content="gemini math solver, AI kalkulator matematika, pecahkan soal matematika foto, OCR matematika AI, solusi matematika otomatis"
+      content="gemini math solver, AI kalkulator matematika, OCR trading berjangka, kalkulator pialang, audit daily statement, solusi matematika otomatis"
     />
     <meta name="author" content="Moch Akmal Almagribi" />
     <meta name="robots" content="index, follow" />
@@ -26,13 +26,10 @@
     <!-- Open Graph / WhatsApp / Social Media Preview -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gemini-mathsolver.vercel.app/" />
-    <meta
-      property="og:title"
-      content="Gemini AI Math Calculator - Solusi Soal Matematika Otomatis"
-    />
+    <meta property="og:title" content="Gemini AI Math & Trading Calculator" />
     <meta
       property="og:description"
-      content="Foto soal matematikamu dan dapatkan jawaban otomatis lengkap dengan langkah-langkah penyelesaiannya menggunakan AI."
+      content="Foto soal atau catatan trading kamu dan dapatkan analisis perhitungan otomatis lengkap dari Gemini AI."
     />
 
     <!-- Schema.org Structured Data -->
@@ -40,11 +37,11 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Gemini AI Math Calculator",
+        "name": "Gemini AI Math & Trading Calculator",
         "url": "https://gemini-mathsolver.vercel.app/",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "All",
-        "description": "Aplikasi berbasis web untuk menyelesaikan soal matematika secara otomatis dari foto menggunakan Google Gemini AI API.",
+        "description": "Aplikasi berbasis web untuk menyelesaikan soal matematika dan analisis transaksi pialang secara otomatis dari foto menggunakan Google Gemini AI API.",
         "author": {
           "@type": "Person",
           "name": "Moch Akmal Almagribi"
@@ -61,6 +58,7 @@
         --text-muted: #8b949e;
         --accent-green: #2ea043;
         --accent-green-hover: #3fb950;
+        --accent-blue: #58a6ff;
         --paper-bg: #fffef0;
         --paper-line: #e8e8e8;
       }
@@ -90,7 +88,7 @@
         border-radius: 12px;
         padding: 24px;
         width: 100%;
-        max-width: 560px;
+        max-width: 580px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       }
 
@@ -113,6 +111,78 @@
         font-size: 0.875rem;
         color: var(--text-muted);
         margin-top: 6px;
+      }
+
+      /* KARTU PANDUAN DAN INFORMASI FITUR (UI BARU) */
+      .info-card {
+        background-color: rgba(88, 166, 255, 0.05);
+        border: 1px solid rgba(88, 166, 255, 0.2);
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .info-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .info-steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+
+      .step-item {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 8px 4px;
+      }
+
+      .step-num {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--accent-blue);
+        display: block;
+      }
+
+      .step-desc {
+        font-size: 0.75rem;
+        color: var(--text-main);
+      }
+
+      .tools-guide {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        line-height: 1.45;
+        border-top: 1px dashed var(--border-color);
+        padding-top: 10px;
+      }
+
+      .tools-guide ul {
+        list-style: none;
+        margin-top: 6px;
+      }
+
+      .tools-guide li {
+        margin-bottom: 4px;
+        padding-left: 14px;
+        position: relative;
+      }
+
+      .tools-guide li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--accent-blue);
       }
 
       .action-menu {
@@ -327,11 +397,98 @@
   <body>
     <main class="container">
       <header>
-        <h1>🤖 Gemini AI Calculator</h1>
-        <p>Unggah foto atau jepret langsung soal matematika</p>
+        <h1>🤖 Gemini AI Smart Calculator</h1>
+        <p>Solusi Otomatis Soal Matematika & Analisis Trading Pialang</p>
       </header>
 
+      <!-- UI BARU: KARTU INFORMASI PANDUAN CARA PAKAI & TOOLS -->
+      <aside class="info-card">
+        <div class="info-title">
+          <span>💡 Cara Penggunaan & Panduan Tools</span>
+        </div>
+
+        <div class="info-steps">
+          <div class="step-item">
+            <span class="step-num">Langkah 1</span>
+            <span class="step-desc">Pilih Mode AI</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">Langkah 2</span>
+            <span class="step-desc">Foto / Unggah</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">Langkah 3</span>
+            <span class="step-desc">Klik Hitung</span>
+          </div>
+        </div>
+
+        <div class="tools-guide">
+          <strong>Pilihan Tools AI Yang Tersedia:</strong>
+          <ul>
+            <li>
+              <strong>Mode 1 Matematika:</strong> Selesaikan soal akademik dari
+              foto secara rinci.
+            </li>
+            <li>
+              <strong>Mode 2 Simulator 2 Arah:</strong> Hitung potensi
+              profit/loss skenario Buy & Sell.
+            </li>
+            <li>
+              <strong>Mode 3 Asisten WPB:</strong> Baca tulisan tangan pialang &
+              buat draft WhatsApp ke nasabah.
+            </li>
+            <li>
+              <strong>Mode 4 Audit Statement:</strong> Pindai Daily/Temporary
+              Statement untuk cek ketahanan dana.
+            </li>
+          </ul>
+        </div>
+      </aside>
+
       <section class="calculator-body">
+        <!-- Pemilih Mode AI -->
+        <div style="margin-bottom: 15px">
+          <label
+            for="calcMode"
+            style="
+              display: block;
+              font-size: 0.85rem;
+              color: var(--text-muted);
+              margin-bottom: 6px;
+              font-weight: 600;
+            "
+          >
+            🎯 Pilih Mode AI yang Ingin Digunakan:
+          </label>
+          <select
+            id="calcMode"
+            style="
+              width: 100%;
+              padding: 12px;
+              background-color: #21262d;
+              color: var(--text-main);
+              border: 1px solid var(--border-color);
+              border-radius: 8px;
+              font-size: 0.9rem;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            <option value="math">
+              🧮 Mode 1: Kalkulator & OCR Matematika (Umum)
+            </option>
+            <option value="twoway">
+              📈 Mode 2: Simulator Peluang 2 Arah (Buy/Sell)
+            </option>
+            <option value="wpb">
+              👨‍💼 Mode 3: Asisten Edukasi & Draft WA Wakil Pialang
+            </option>
+            <option value="statement">
+              📄 Mode 4: Pemindai & Audit Laporan Harian (Daily Statement)
+            </option>
+          </select>
+        </div>
+
         <div class="action-menu">
           <button class="btn-action" onclick="openCamera()">
             📷 Buka Kamera
@@ -346,7 +503,7 @@
             >Belum ada foto yang dipilih</span
           >
           <figure id="previewWrapper" style="display: none">
-            <img id="imagePreview" alt="Pratinjau Soal Matematika" />
+            <img id="imagePreview" alt="Pratinjau Gambar / Dokumen" />
           </figure>
 
           <input
@@ -365,12 +522,12 @@
         </div>
 
         <button class="btn-submit" id="btnHitung" onclick="hitungSoal()">
-          Hitung Soal
+          Hitung & Analisis Sekarang
         </button>
 
         <aside class="loading-container" id="loadingBox">
           <div class="random-math-stream" id="mathStream">3 x 6 + 2 = ...</div>
-          <p class="loading-text">Menganalisis gambar & menghitung...</p>
+          <p class="loading-text">Menganalisis gambar & memproses data...</p>
         </aside>
 
         <article id="result" class="result-box"></article>
@@ -423,7 +580,7 @@
           reader.onload = function (e) {
             imagePreview.src = e.target.result;
             previewWrapper.style.display = "flex";
-            uploadText.innerText = "Foto Soal Matematika:";
+            uploadText.innerText = "Foto Soal / Dokumen Siap Diproses:";
           };
           reader.readAsDataURL(file);
         }
@@ -463,6 +620,7 @@
         const loadingBox = document.getElementById("loadingBox");
         const perfMetric = document.getElementById("perfMetric");
         const latencyValue = document.getElementById("latencyValue");
+        const selectedMode = document.getElementById("calcMode").value;
 
         const file = selectedFileInput.files[0];
         const reader = new FileReader();
@@ -486,6 +644,7 @@
               body: JSON.stringify({
                 imageBase64: base64Data,
                 mimeType: mimeType,
+                mode: selectedMode,
               }),
             });
 
